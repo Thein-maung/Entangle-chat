@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Entangle Voice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Entangled Voice</h1>
+  <div id="status">Loading...</div>
+
+  <div id="voice-container">
+    <button id="create">Create Call</button>
+    <canvas id="call-qr" hidden></canvas>
+    <input type="text" id="join-id" placeholder="Enter Call ID">
+    <button id="join">Join</button>
+
+    <div id="call-ui" hidden>
+      <button id="mute">Mute</button>
+      <button id="end">End</button>
+      <audio id="remote-audio" autoplay></audio>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+    import { getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+    window.firebase = { initializeApp, getDatabase, ref, push, onValue, set, remove };
+  </script>
+
+  <script type="module" src="voice.js"></script>
+</body>
+</html>
