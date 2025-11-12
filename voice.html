@@ -1,7 +1,56 @@
-<!-- voice.html — ADD THESE BEFORE </body> -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-  import { getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
-  window.firebase = { initializeApp, getDatabase, ref, push, onValue, set, remove };
-</script>
-<script type="module" src="voice.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Entangle Voice Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { margin: 0; font-family: system-ui; background: #0f2027; color: #e0f7fa; text-align: center; padding: 2rem; }
+    h1 { color: #00bcd4; margin-bottom: 1rem; }
+    #status { margin: 1rem; font-weight: bold; }
+    #voice-container { max-width: 400px; margin: 2rem auto; }
+    button { margin: 0.5rem; padding: 0.75rem 1.5rem; font-size: 1rem; background: #00bcd4; color: #0f2027; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #00e5ff; }
+    button:disabled { background: #555; cursor: not-allowed; }
+    input { width: 200px; padding: 0.5rem; margin: 0.5rem; }
+    canvas { margin: 1rem auto; display: block; }
+    #call-ui { margin-top: 2rem; }
+    #call-ui button { font-size: 1.2rem; padding: 1rem; }
+    audio { width: 100%; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Entangled Voice</h1>
+  <div id="status">Initializing...</div>
+
+  <div id="voice-container">
+    <button id="create" disabled>Create Call</button>
+    <canvas id="call-qr" hidden></canvas>
+
+    <div>
+      <input type="text" id="join-id" placeholder="Enter Call ID" disabled />
+      <button id="join" disabled>Join Call</button>
+    </div>
+
+    <div id="call-ui" hidden>
+      <button id="mute">Mute</button>
+      <button id="end">End Call</button>
+      <audio id="remote-audio" autoplay></audio>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK (v10+) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+    import { getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+
+    // Make available globally for voice.js
+    window.firebase = { initializeApp, getDatabase, ref, push, onValue, set, remove };
+  </script>
+
+  <!-- Your voice logic -->
+  <script type="module" src="voice.js"></script>
+</body>
+</html>
