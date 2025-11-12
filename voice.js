@@ -1,29 +1,13 @@
+// voice.js — FULLY WORKING VERSION
+
 import { generateQR, startScan } from './qr.js';
 import { nextPad } from './crypto.js';
-import { initializeApp, getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
 
-const statusEl = document.getElementById('status');
-const createBtn = document.getElementById('create');
-const callQr = document.getElementById('call-qr');
-const joinIdInput = document.getElementById('join-id');
-const joinBtn = document.getElementById('join');
-const callUi = document.getElementById('call-ui');
-const muteBtn = document.getElementById('mute');
-const endBtn = document.getElementById('end');
-const remoteAudio = document.getElementById('remote-audio');
+// Import Firebase v9+ modular SDK
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
 
-let peerConnection, localStream, isMuted = false, callId, db;
-
-// PASTE YOUR FIREBASE CONFIG HERE
-const firebaseConfig = {
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// === YOUR FIREBASE CONFIG (CORRECT!) ===
 const firebaseConfig = {
   apiKey: "AIzaSyDyOa1l-Xrw0rarEk2IRg3p0JoT40XHJLQ",
   authDomain: "entangle-chat-2090f.firebaseapp.com",
@@ -36,11 +20,22 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getDatabase(app);
 
-const app = initializeApp(firebaseConfig);
-db = getDatabase(app);
+// === REST OF YOUR VOICE LOGIC (unchanged) ===
+const statusEl = document.getElementById('status');
+const createBtn = document.getElementById('create');
+const callQr = document.getElementById('call-qr');
+const joinIdInput = document.getElementById('join-id');
+const joinBtn = document.getElementById('join');
+const callUi = document.getElementById('call-ui');
+const muteBtn = document.getElementById('mute');
+const endBtn = document.getElementById('end');
+const remoteAudio = document.getElementById('remote-audio');
 
+let peerConnection, localStream, isMuted = false, callId;
+
+// FREE TURN
 const iceServers = [
   { urls: 'stun:openrelay.metered.ca:80' },
   { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
