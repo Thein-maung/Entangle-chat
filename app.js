@@ -25,11 +25,11 @@ scanBtn.onclick = () => startScan(async data => {
     currentSeed = bin;
     await setSeed(bin);
     isEntangled = true;
-    status.textContent = 'Entangled!';
+    status.textContent = '✅ Entangled!';
     status.style.color = 'green';
     output.textContent = 'Paired – Start chatting!';
   } catch (e) {
-    status.textContent = 'Error: ' + e.message;
+    status.textContent = '❌ ' + e.message;
     status.style.color = 'red';
   }
 });
