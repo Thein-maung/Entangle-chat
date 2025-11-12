@@ -1,13 +1,8 @@
-// voice.js — FULLY WORKING VERSION
-
 import { generateQR, startScan } from './qr.js';
 import { nextPad } from './crypto.js';
 
-// Import Firebase v9+ modular SDK
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { getDatabase, ref, push, onValue, set, remove } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+const { initializeApp, getDatabase, ref, push, onValue, set, remove } = window.firebase;
 
-// === YOUR FIREBASE CONFIG (CORRECT!) ===
 const firebaseConfig = {
   apiKey: "AIzaSyDyOa1l-Xrw0rarEk2IRg3p0JoT40XHJLQ",
   authDomain: "entangle-chat-2090f.firebaseapp.com",
@@ -18,11 +13,9 @@ const firebaseConfig = {
   measurementId: "G-8LQX0PMXGP"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// === REST OF YOUR VOICE LOGIC (unchanged) ===
 const statusEl = document.getElementById('status');
 const createBtn = document.getElementById('create');
 const callQr = document.getElementById('call-qr');
@@ -35,7 +28,6 @@ const remoteAudio = document.getElementById('remote-audio');
 
 let peerConnection, localStream, isMuted = false, callId;
 
-// FREE TURN
 const iceServers = [
   { urls: 'stun:openrelay.metered.ca:80' },
   { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
@@ -46,13 +38,13 @@ const iceServers = [
 async function init() {
   try {
     await nextPad(32);
-    statusEl.textContent = 'Entangled – Ready';
+    statusEl.textContent = '✅ Entangled – Ready';
     statusEl.style.color = 'green';
     createBtn.disabled = false;
     joinIdInput.disabled = false;
     joinBtn.disabled = false;
   } catch {
-    statusEl.textContent = 'Entangle first';
+    statusEl.textContent = '❌ Entangle first';
     statusEl.style.color = 'red';
   }
 }
@@ -82,14 +74,12 @@ async function startCall(isCaller) {
   peerConnection.ontrack = e => {
     remoteAudio.srcObject = e.streams[0];
     callUi.hidden = false;
-    statusEl.textContent = 'Connected';
+    statusEl.textContent = '🟢 Connected';
   };
 
   onValue(ref(db, `calls/${callId}/${isCaller ? 'answer' : 'offer'}Candidates`), snapshot => {
     snapshot.forEach(child => {
-      if (peerConnection.remoteDescription) {
-        peerConnection.addIceCandidate(new RTCIceCandidate(child.val()));
-      }
+      if (peerConnection.remoteDescription) peerConnection.addIceCandidate(new RTCIceCandidate(child.val()));
     });
   });
 
@@ -99,9 +89,7 @@ async function startCall(isCaller) {
     set(ref(db, `calls/${callId}/offer`), { type: offer.type, sdp: offer.sdp });
     onValue(ref(db, `calls/${callId}/answer`), async snapshot => {
       const data = snapshot.val();
-      if (data && !peerConnection.remoteDescription) {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(data));
-      }
+      if (data && !peerConnection.remoteDescription) await peerConnection.setRemoteDescription(new RTCSessionDescription(data));
     });
   } else {
     onValue(ref(db, `calls/${callId}/offer`), async snapshot => {
@@ -118,12 +106,12 @@ async function startCall(isCaller) {
   muteBtn.onclick = () => {
     isMuted = !isMuted;
     localStream.getAudioTracks()[0].enabled = !isMuted;
-    muteBtn.textContent = isMuted ? 'Unmute' : 'Mute';
+    muteBtn.textContent = isMuted ? '🔊 Unmute' : '🔇 Mute';
   };
   endBtn.onclick = () => {
-    peerConnection.close();
-    localStream.getTracks().forEach(t => t.stop());
-    remove(ref(db, `calls/${callId}`));
+    peerConnection?.close();
+    localStream?.getTracks().forEach(t => t.stop());
+    if (callId) remove(ref(db, `calls/${callId}`));
     callUi.hidden = true;
     statusEl.textContent = 'Call ended';
   };
