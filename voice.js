@@ -16,14 +16,27 @@ let peerConnection, localStream, isMuted = false, callId, db;
 
 // PASTE YOUR FIREBASE CONFIG HERE
 const firebaseConfig = {
-  // apiKey: "YOUR_API_KEY",
-  // authDomain: "your-project.firebaseapp.com",
-  // databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-  // projectId: "your-project",
-  // storageBucket: "your-project.appspot.com",
-  // messagingSenderId: "123456789",
-  // appId: "1:123456789:web:abcdef123456"
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDyOa1l-Xrw0rarEk2IRg3p0JoT40XHJLQ",
+  authDomain: "entangle-chat-2090f.firebaseapp.com",
+  projectId: "entangle-chat-2090f",
+  storageBucket: "entangle-chat-2090f.firebasestorage.app",
+  messagingSenderId: "448597724751",
+  appId: "1:448597724751:web:2f74b317f8cd761094643a",
+  measurementId: "G-8LQX0PMXGP"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 const app = initializeApp(firebaseConfig);
 db = getDatabase(app);
